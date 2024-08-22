@@ -2,6 +2,7 @@ const express = require('express');
 const verifyToken = require('../middleware/verify-token.js');
 const Budget = require('../models/budget.js')
 const router = express.Router();
+const expenseRouter = require('./expenses.js')
 
 // ========== Public Routes ===========
 
@@ -74,4 +75,5 @@ router.delete('/:budgetId', async (req, res) => {
   }
 })
 
-module.exports = router;
+router.use('/:budgetId/expenses', expenseRouter)
+module.exports = router
