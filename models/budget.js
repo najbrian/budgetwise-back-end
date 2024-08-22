@@ -9,7 +9,9 @@ const notesSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   } 
-})
+},
+{timestamps: true}
+)
 
 const expenseSchema = new mongoose.Schema({
   name: {
@@ -49,7 +51,8 @@ const budgetSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
-})
+},
+{timestamps: true})
 
 const Budget = mongoose.model('Budget', budgetSchema)
 
