@@ -38,11 +38,14 @@ router.post('/:expenseId/notes', async (req, res) => {
     expense.notes.push(req.body)
     await budget.save()
 
-    const newNote = budget.expense.notes[budget.expense.notes._doclength - 1]
+    const expenseNote = budget.expense.id(req.params.expenseId)
+    const newNote = expenseNote.notes[expenseNote.notes.length - 1]
     newNote._doc.owner = req.user
 
+    
     res.status(201).json(newNote)
   } catch (error) {
+    console.log(error)
     res.status(500).json(error)
   } 
 })
