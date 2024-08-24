@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req, res) => {
   try {
-    const budgets = await Budget.find({})
+    const budgets = await Budget.find({owner: req.user._id})
       .populate('owner')
       .sort({ createdAt: 'desc' })
     res.status(200).json(budgets)
@@ -74,6 +74,19 @@ router.delete('/:budgetId', async (req, res) => {
     res.status(500).json(error)
   }
 })
+
+router.get('/:budgetId/expenses/:expenseId', async (req, res) => {
+  try {
+    const budget = await Budget.findById(req.params.budgetId)
+    const expense = budget.expense.id(req.params.expenseId)
+    console.log('Expense:', expense)
+    if (!expense) return res.status(404).send('Expense not found');
+    res.status(200).json(expense)
+  } catch (error) {
+    console.error('Error fetching expense:', error)
+    res.status(500).json(error)
+  }
+});
 
 router.use('/:budgetId/expenses', expenseRouter)
 module.exports = router

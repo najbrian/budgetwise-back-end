@@ -5,7 +5,7 @@ const router = express.Router({ mergeParams: true })
 router.post('/', async (req, res) => {
   try {
     req.body.owner = req.user._id
-    const budget = await Budget.findById(req.params.budgetId)
+    const budget = await Budget.findById(req.params.budgetId).populate('owner')
     budget.expense.push(req.body)
     await budget.save()
 
@@ -24,7 +24,7 @@ router.put('/:expenseId', async (req, res) => {
     if (!budget.owner.equals(req.user._id)) {
       return res.status(403).send('You are not allowed to make changes to this expense.')
     }
-    const updatedExpense = await budget.expense.id(req.params.expenseId)
+    const updatedExpense = await budget.expense.id(req.params.expenseId).populate('owner')
     updatedExpense.name = req.body.name
     updatedExpense.amount = req.body.amount
     updatedExpense.type = req.body.type
@@ -50,11 +50,11 @@ router.delete('/:expenseId', async (req, res) => {
 router.post('/:expenseId/notes', async (req, res) => {
   try {
     req.body.owner = req.user._id
-    const budget = await Budget.findById(req.params.budgetId)
-    const expense = budget.expense.id(req.params.expenseId)
+    const budget = await Budget.findById(req.params.budgetId).populate('owner')
+    const expense = budget.expense.id(req.params.expenseId).populate('owner')
     expense.notes.push(req.body)
     await budget.save()
-    const expenseNote = budget.expense.id(req.params.expenseId)
+    const expenseNote = budget.expense.id(req.params.expenseId).populate('owner')
     const newNote = expenseNote.notes[expenseNote.notes.length - 1]
     newNote._doc.owner = req.user
     res.status(201).json(newNote)
@@ -66,8 +66,8 @@ router.post('/:expenseId/notes', async (req, res) => {
 
 router.put('/:expenseId/notes/:noteId', async (req, res) => {
   try {
-    const budget = await Budget.findById(req.params.budgetId)
-    const expense = await budget.expense.id(req.params.expenseId)
+    const budget = await Budget.findById(req.params.budgetId).populate('owner')
+    const expense = await budget.expense.id(req.params.expenseId).populate('owner')
     if (!expense.owner.equals(req.user._id)) {
       return res.status(403).send('You are not allowed to make changes to this expense.')
     }
