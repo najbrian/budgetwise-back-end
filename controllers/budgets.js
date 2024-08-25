@@ -79,7 +79,6 @@ router.get('/:budgetId/expenses/:expenseId', async (req, res) => {
   try {
     const budget = await Budget.findById(req.params.budgetId)
     const expense = budget.expense.id(req.params.expenseId)
-    console.log('Expense:', expense)
     if (!expense) return res.status(404).send('Expense not found');
     res.status(200).json(expense)
   } catch (error) {
@@ -89,4 +88,5 @@ router.get('/:budgetId/expenses/:expenseId', async (req, res) => {
 });
 
 router.use('/:budgetId/expenses', expenseRouter)
+
 module.exports = router

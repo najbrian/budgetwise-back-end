@@ -21,10 +21,7 @@ router.post('/', async (req, res) => {
 router.put('/:expenseId', async (req, res) => {
   try {
     const budget = await Budget.findById(req.params.budgetId)
-    if (!budget.owner.equals(req.user._id)) {
-      return res.status(403).send('You are not allowed to make changes to this expense.')
-    }
-    const updatedExpense = await budget.expense.id(req.params.expenseId).populate('owner')
+    const updatedExpense = await budget.expense.id(req.params.expenseId)
     updatedExpense.name = req.body.name
     updatedExpense.amount = req.body.amount
     updatedExpense.type = req.body.type
@@ -45,7 +42,6 @@ router.delete('/:expenseId', async (req, res) => {
     res.status(500).json(error)
   }
 })
-
 
 router.post('/:expenseId/notes', async (req, res) => {
   try {
