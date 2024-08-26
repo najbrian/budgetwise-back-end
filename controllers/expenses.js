@@ -2,6 +2,18 @@ const express = require('express')
 const Budget = require('../models/budget')
 const router = express.Router({ mergeParams: true })
 
+router.get('/:expenseId', async (req, res) => {
+  try {
+    const budget = await Budget.findById(req.params.budgetId).populate(['owner', 'expense.owner', 'expense.notes.owner'])
+    const expense = budget.expense.id(req.params.expenseId)
+    if (!expense) return res.status(404).send('Expense not found');
+    res.status(200).json(expense)
+  } catch (error) {
+    console.error('Error fetching expense:', error)
+    res.status(500).json(error)
+  }
+});
+
 router.post('/', async (req, res) => {
   try {
     req.body.owner = req.user._id
@@ -46,12 +58,11 @@ router.delete('/:expenseId', async (req, res) => {
 router.post('/:expenseId/notes', async (req, res) => {
   try {
     req.body.owner = req.user._id
-    const budget = await Budget.findById(req.params.budgetId).populate('owner')
-    const expense = budget.expense.id(req.params.expenseId).populate('owner')
+    const budget = await Budget.findById(req.params.budgetId)
+    const expense = budget.expense.id(req.params.expenseId)
     expense.notes.push(req.body)
     await budget.save()
-    const expenseNote = budget.expense.id(req.params.expenseId).populate('owner')
-    const newNote = expenseNote.notes[expenseNote.notes.length - 1]
+    const newNote = expense.notes[expense.notes.length - 1]
     newNote._doc.owner = req.user
     res.status(201).json(newNote)
   } catch (error) {
@@ -62,8 +73,8 @@ router.post('/:expenseId/notes', async (req, res) => {
 
 router.put('/:expenseId/notes/:noteId', async (req, res) => {
   try {
-    const budget = await Budget.findById(req.params.budgetId).populate('owner')
-    const expense = await budget.expense.id(req.params.expenseId).populate('owner')
+    const budget = await Budget.findById(req.params.budgetId)
+    const expense = await budget.expense.id(req.params.expenseId)
     if (!expense.owner.equals(req.user._id)) {
       return res.status(403).send('You are not allowed to make changes to this expense.')
     }
