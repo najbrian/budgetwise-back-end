@@ -99,7 +99,7 @@ router.delete('/:expenseId/notes/:noteId', async (req, res) => {
     }
     expense.notes.remove({ _id: req.params.noteId})
     await budget.save()
-    res.status(200).json({ message: "Note deleted" })
+    res.status(200).json(budget)
   } catch (error) {
     res.status(500).json(error)
   }
