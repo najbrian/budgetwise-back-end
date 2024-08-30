@@ -12,12 +12,12 @@ router.post('/signup', async (req, res) => {
         // Check if the username is already taken
         const userInDatabase = await User.findOne({ username: req.body.username });
         if (userInDatabase) {
-            return res.json({error: 'Username already taken.'});
+            return res.json({ error: 'Username already taken.' });
         }
 
         const emailInDatabase = await User.findOne({ email: req.body.email })
         if (emailInDatabase) {
-            return res.status(400).json({ error: 'Email already taken.'})
+            return res.status(400).json({ error: 'Email already taken.' })
         }
         // Create a new user with hashed password
         const user = await User.create({
@@ -38,7 +38,7 @@ router.post('/signin', async (req, res) => {
     try {
         const user = await User.findOne({ username: req.body.username });
         if (user && bcrypt.compareSync(req.body.password, user.hashedPassword)) {
-            const token = jwt.sign({ username: user.username, _id: user._id }, process.env.JWT_SECRET);
+            const token = jwt.sign({ username: user.username, _id: user._id, firstname: user.firstname, lastname: user.lastname, email: user.email }, process.env.JWT_SECRET);
             res.status(200).json({ token });
         } else {
             res.status(401).json({ error: 'Invalid username or password.' });
