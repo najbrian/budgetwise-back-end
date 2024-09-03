@@ -23,6 +23,8 @@ app.use('/users', usersRouter);
 app.use('/profiles', profilesRouter);
 app.use('/budgets', budgetRouter)
 
-app.listen(3000, () => {
-    console.log('The express app is ready!');
+app.set("port", process.env.PORT || 3000);
+
+app.listen(app.get("port"), () => {
+  console.log(`✅ PORT: ${app.get("port")} 🌟`);
 });
