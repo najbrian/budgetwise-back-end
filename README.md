@@ -36,3 +36,4 @@
 ## :satellite: Upcoming Features
 
 - [ ] Ability to update notes
+- [ ] Ability to approve/deny expenses as the owner of a budget
