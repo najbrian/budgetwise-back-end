@@ -6,7 +6,7 @@ router.get('/:expenseId', async (req, res) => {
   try {
     const budget = await Budget.findById(req.params.budgetId).populate(['owner', 'expense.owner', 'expense.notes.owner'])
     const expense = budget.expense.id(req.params.expenseId)
-    if (!expense) return res.status(404).send('Expense not found!!!!!!!');
+    if (!expense) return res.status(404).send('Expense not found');
     res.status(200).json(expense)
   } catch (error) {
     console.error('Error fetching expense:', error)
