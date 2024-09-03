@@ -51,6 +51,11 @@ const budgetSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
+
+  canEdit: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', 
+  }
 },
 {timestamps: true})
 
