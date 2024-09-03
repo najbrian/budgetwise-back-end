@@ -91,7 +91,8 @@ router.delete('/:expenseId/notes/:noteId', async (req, res) => {
   try {
     const budget = await Budget.findById(req.params.budgetId)
     const expense = await budget.expense.id(req.params.expenseId)
-    if (!expense.owner.equals(req.user._id)) {
+    const note = await expense.notes.id(req.params.noteId)
+    if (!note.owner._id.equals(req.user._id)) {
       return res.status(403).send('You are not allowed to make changes to this expense.')
     }
     if (!expense.notes.id({ _id: req.params.noteId})) {
@@ -101,6 +102,7 @@ router.delete('/:expenseId/notes/:noteId', async (req, res) => {
     await budget.save()
     res.status(200).json(budget)
   } catch (error) {
+    console.log(error)
     res.status(500).json(error)
   }
 })
