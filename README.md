@@ -12,6 +12,8 @@
 
   
  The BudgetWise backend API holds user, budget, expense, and expense notes for the BudgetWise App. This API authenticates and authorizes users to share, create, update, and delete budgets, expenses, and notes privately or shared amongst other users.
+
+   ### [CHECK OUT FRONTEND](<https://github.com/najbrian/budgetwise-front-end/>)
   
   </div>
 
